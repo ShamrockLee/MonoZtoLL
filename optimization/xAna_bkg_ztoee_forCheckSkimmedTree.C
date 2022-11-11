@@ -13,6 +13,7 @@
 #include <math.h>
 #include <string>
 #include <TTreeReader.h>
+#include <TError.h>
 using namespace std;
 
 void efferr(float nsig, float ntotal, float factor = 1)
@@ -971,3 +972,12 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-
     outFile->Close();
 } // big end
 //Store the result in outputfile (root)
+
+int main(int argc, char **argv) {
+    if (argc <= 2) {
+        Error("xAna_bkg_ztoee_forCheckSkimmedTree.C:main", "Expect arguments INFILE OUTFILE");
+        return 1;
+    }
+    xAna_bkg_ztoee_forCheckSkimmedTree(argv[1], argv[2]);
+    return 0;
+}
