@@ -10,9 +10,10 @@
 #include "skeeto_optparse.h"
 
 void xAna_monoZ_plot_optimization(std::string fileOut, std::vector<std::string> vFileIn, size_t nThread, int debug) {
+    ROOT::EnableImplicitMT(nThread);
     ROOT::RDataFrame dfIn("outTree", vFileIn);
     ROOT::RDF::RNode dfOut = dfIn.Define("unsigned_one", "1u");
-    ROOT::RDF::RResultPtr<TH1D> histview_mcweight = dfOut.Histo1D({"h_pfMetCorrPt", "h_pfMetCorrPt", 1u, 0., 0.}, "unsigned_one", "mcweight");
+    ROOT::RDF::RResultPtr<TH1D> histview_mcweight = dfOut.Histo1D({"h_mcweight", "h_mcweight", 1u, 0., 0.}, "unsigned_one", "mcweight");
     ROOT::RDF::RResultPtr<TH1D> histview_pfMetCorrPt = dfOut.Histo1D({"h_pfMetCorrPt", "h_pfMetCorrPt", 500u, 0., 500.}, "st_pfMetCorrPt", "mcweight");
     // See https://root.cern/manual/root_files/
     std::unique_ptr<TFile> tfOut(TFile::Open(fileOut.c_str(), "recreate"));
