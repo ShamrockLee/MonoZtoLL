@@ -6,6 +6,7 @@
 #include <ROOT/RResultPtr.hxx>
 #include <TH1.h>
 
+#define OPTPARSE_IMPLEMENTATION
 #include "skeeto_optparse.h"
 
 void xAna_monoZ_plot_optimization(std::string fileOut, std::vector<std::string> vFileIn, size_t nThread, int debug) {
