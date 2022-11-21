@@ -417,7 +417,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-
 
         //get TTree from file ...
         //TreeReader data(inputFile.data());
-        TreeReader data(inputFilename.data());
+        TreeReader data(inputFilename.data(), "outTree");
         //TTreeReader data("outTree", file);
 
         Long64_t nTotal = 0;
