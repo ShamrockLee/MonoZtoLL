@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <TH1D.h>
 #include <TH1F.h>
+#include <TH2F.h>
 #include <TFile.h>
 #include "untuplizer.h"
 #include <TClonesArray.h>
@@ -257,6 +258,17 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
     h_recoee_nAK4pass->GetYaxis()->SetTitle("Number of Events");
     h_recoee_nAK4pass->Sumw2();
 
+    TH1D *h_ZbosonPt = new TH1D("h_ZbosonPt", "ZbosonPt", 500, 0, 500);
+    h_ZbosonPt->GetXaxis()->SetTitle("Pt of Z boson after preselection");
+    h_ZbosonPt->GetYaxis()->SetTitle("Number of Events");
+
+    TH1D *h_pfMetCorrPt = new TH1D("h_pfMetCorrPt", "pfMetCorrPt", 500, 0, 500);
+    h_pfMetCorrPt->GetXaxis()->SetTitle("Missing transverse momentum after preselection");
+    h_pfMetCorrPt->GetYaxis()->SetTitle("Number of Events");
+
+    TH2F *h2_ZbosonPt_pfMetCorrPt = new TH2F("h2_ZbosonPt_pfMetCorrPt", "ZbosonPt vs. pfMetCorrPt", 500, 0, 500, 500, 0, 500);
+    h2_ZbosonPt_pfMetCorrPt->GetXaxis()->SetTitle("Pt of Z boson after preselection");
+    h2_ZbosonPt_pfMetCorrPt->GetYaxis()->SetTitle("Missing transverse momentum after preselection");
     //----------------------
     // Void Tree variable
     //----------------------
@@ -286,6 +298,8 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
     Float_t f_ZbosonMass;
     Float_t f_ZbosonEta;
     Float_t f_ZbosonPhi;
+
+    Float_t f_pfMetCorrPt;
     vector<float> v_met;
     vector<float> v_met_lepdeltaPhi;
     Int_t I_nThinJets;
@@ -340,6 +354,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
     T_tree->Branch("f_ZbosonMass", &f_ZbosonMass);
     T_tree->Branch("f_ZbosonEta", &f_ZbosonEta);
     T_tree->Branch("f_ZbosonPhi", &f_ZbosonPhi);
+    T_tree->Branch("f_pfMetCorrPt", &f_pfMetCorrPt);
     
     T_tree->Branch("f_goodElePt", &f_goodElePt);
     T_tree->Branch("f_goodEleMass", &f_goodEleMass);
@@ -849,7 +864,12 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
                     //f_HT = HT;
                     //f_Met = met;
                     //I_nThinJets = indexForPassAK4.size();
+                    Float_t pfMetCorrPt = data.GetFloat("st_pfMetCorrPt");
+                    f_pfMetCorrPt = pfMetCorrPt;
                     T_tree->Fill();
+                    h_ZbosonPt->Fill(Zboson_pt, eventWeight);
+                    h_pfMetCorrPt->Fill(pfMetCorrPt, eventWeight);
+                    h2_ZbosonPt_pfMetCorrPt->Fill(pfMetCorrPt, Zboson_pt, eventWeight);
                 } // End of recoeeEvent Loop
             }     // End of matchee (gen ee)
         }         // End of Event Entries loop
@@ -976,6 +996,9 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
     //h_goodTauMass->Write();
     //h_goodTauEta->Write();
     //h_goodTauPhi->Write();
+    h_ZbosonPt->Write();
+    h_pfMetCorrPt->Write();
+    h2_ZbosonPt_pfMetCorrPt->Write();
     outFile->cd("/");
     outFile->Close();
 } // big end
