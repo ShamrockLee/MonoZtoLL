@@ -1,0 +1,69 @@
+##########################################################
+## user setting area
+
+cwdSend               = /afs/cern.ch/work/y/yuehshun/private/Projects/ShamrockLee/ctau-proper/lxplus_HTcondor/preselect
+datagroupName         = DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8
+# signal_Mx2-150_Mv-500_Mx1-1_ctau-1
+# signal_Mx2-1_Mv-500_Mx1-0p1_ctau-1
+# signal_Mx2-50_Mv-500_Mx1-1_ctau-10
+# TT
+# 2016BkgMC_DYJetsToLL_M-50_div-HT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+#listFile              = dataTest.txt
+listFile              = dataTest_ntuple_$(datagroupName).txt
+# listFile              = dataTest_ntuple_$(datagroupName)_testing.txt
+splittedListSpace     = SkimmedFiles_2017Background_Lists_splitted.tmp
+outputLogSpace        = SkimmedFiles_2017Background_Lists_outputlog.tmp
+# outputSpace           = /eos/user/y/yuehshun/SkimmedFiles_2017Background_Lists_output.tmp
+# Craft the "$(outputTransferPrefix)" from "$(inputFile)" by
+# removing the "$(splittedListSpace)/" from the beginning and
+# the filename (basename) part of "$(inputFile)" plus the preceeding "/" from the end
+subdirOfInput         = $$([substr("$(inputFile)", size("$(splittedListSpace)") + 1, -(size("$Fn(inputFile)") + 4 + 1))])
+# exeMacro              = xAna_monoZ_preselect.C
+macroName             = xAna_monoZ_preselect
+singularityImage      = ana.sif
+
+# +JobFlavour           = "longlunch"
++JobFlavour           = "tomorrow"
+
+# Name          Duration
+# espresso      20min   
+# microcentury  1h  
+# longlunch     2h  
+# workday       8h  
+# tomorrow      1d  
+# testmatch     3d  
+# nextweek      1w  
+
+##########################################################
+
+
+# outputTransfer        = $(outputSpace)/$(subdirOfInput)/output_$Fn(inputFile)_$(ClusterId).root
+# outputVar             = testOut.root
+# #outputVar             = testOutSignal.root
+
+universe              = vanilla
+executable            = subMacroMultiCopyInternalOutname.sh
+output                = $(outputLogSpace)/$(subdirOfInput)/out/job_$(ClusterId)_$(ProcId)_$Fn(inputFile).out
+error                 = $(outputLogSpace)/$(subdirOfInput)/err/job_$(ClusterId)_$(ProcId)_$Fn(inputFile).err
+log                   = $(outputLogSpace)/$(subdirOfInput)/job_$(ClusterId)_splitted.log
+arguments             = $(cwdSend) $(macroName) $(ClusterId) $(inputFile)
+
+
+# # Not to rely on the transfer mechanism of HTcondor
+# # and get/send files through sdared filesystems
+# # (AFS / EOS) directly.
+# # As HTCondor seems to require should_transfer_files to opt-in
+# # We transfer a dummy file instead.
+# # Note that we still use the logging feature of HTCondor
+should_transfer_files   = Yes
+
+when_to_transfer_output = ON_EXIT
+# transfer_output_remaps  = "$(outputVar)=$(outputTransfer)"
+# transfer_input_files    = $(singularityImage)
+transfer_input_files    = dummy_transfer.txt
+transfer_output_files    = dummy_transfer.txt
+
+request_cpus            = 8
+request_memory          = 12288
+
+queue inputFile from $(listFile)
