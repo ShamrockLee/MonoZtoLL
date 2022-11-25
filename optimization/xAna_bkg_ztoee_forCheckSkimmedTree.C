@@ -66,8 +66,16 @@ float cal_dphi(float phi1, float phi2)
     return TMath::Abs(dphi);
 }
 
+void xAna_bkg_ztoee_forCheckSkimmedTree(const char *inputFilename = "../DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root", const char *outputfile = "outputEffCheck_DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root");
+void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int nInputFilename, const char *outputfile);
+
+void xAna_bkg_ztoee_forCheckSkimmedTree(const char *inputFilename, const char *outputfile)
+{
+    return xAna_bkg_ztoee_forCheckSkimmedTree(&inputFilename, 1, outputfile);
+}
+
 //void xAna_bkg_ztoee_forCheckSkimmedTree(string inputtxtFilename, string outputfile)
-void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root", string outputfile = "outputEffCheck_DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root")
+void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int nInputFilename, const char *outputfile)
 {
 
     //TFile *file = TFile::Open(inputFilename);
@@ -417,7 +425,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-
 
         //get TTree from file ...
         //TreeReader data(inputFile.data());
-        TreeReader data(inputFilename.data(), "outTree");
+        TreeReader data(pInputFilename, 1, "outTree");
         //TTreeReader data("outTree", file);
 
         Long64_t nTotal = 0;
@@ -926,7 +934,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-
     //}//end of flist loop
 
     // out Tree branches
-    TFile *outFile = new TFile(outputfile.c_str(), "RECREATE");
+    TFile *outFile = new TFile(outputfile, "RECREATE");
     outFile->cd();
     T_tree->Write();
     outFile->mkdir("Event_Variable", "Event_Variable")->cd();
@@ -975,9 +983,9 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(string inputFilename = "../DYJetsToLL_M-
 
 int main(int argc, char **argv) {
     if (argc <= 2) {
-        Error("xAna_bkg_ztoee_forCheckSkimmedTree.C:main", "Expect arguments INFILE OUTFILE");
+        Error("xAna_bkg_ztoee_forCheckSkimmedTree.C:main", "Expect arguments OUTFILE INFILE1 [INFILE2 ...]");
         return 1;
     }
-    xAna_bkg_ztoee_forCheckSkimmedTree(argv[1], argv[2]);
+    xAna_bkg_ztoee_forCheckSkimmedTree(const_cast<const char**>(argv) + 2, argc - 2, argv[1]);
     return 0;
 }
