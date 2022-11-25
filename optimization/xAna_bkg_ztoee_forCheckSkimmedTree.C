@@ -792,8 +792,8 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
                         temp_emergTrackPhi.clear();
                         temp_emergTrackdR.clear();
 
-                        if (THINjetAlpha3D[iak4j] < 0.1)
-                        {
+                        //if (THINjetAlpha3D[iak4j] < 0.1)
+                        //{
                             emergTrackMultiplicity = THINjetNTracks[iak4j];
                             for (int it = 0; it < THINjetNTracks[iak4j]; it++)
                             {
@@ -826,9 +826,9 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
                            v_emergingTrackEta.insert(v_emergingTrackEta.end(), temp_emergTrackEta.begin(), temp_emergTrackEta.end());
                            v_emergingTrackPhi.insert(v_emergingTrackPhi.end(), temp_emergTrackPhi.begin(), temp_emergTrackPhi.end());
                            v_emergingTrackAK4jetdR.insert(v_emergingTrackAK4jetdR.end(), temp_emergTrackdR.begin(), temp_emergTrackdR.end());
-                        }
-                        else
-                            continue;
+                        //}
+                        //else
+                        //    continue;
                     } //end of ak4jet loop for emerg track (emerg jet)
                     
 
