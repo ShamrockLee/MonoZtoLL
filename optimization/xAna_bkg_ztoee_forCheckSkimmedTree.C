@@ -956,7 +956,8 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
     // out Tree branches
     TFile *outFile = new TFile(outputfile, "RECREATE");
     outFile->cd();
-    T_tree->Write();
+    // Opt-out tree outputs to save space
+    // T_tree->Write();
     outFile->mkdir("Event_Variable", "Event_Variable")->cd();
     h_totevent->Write();
     h_genee_event->Write();
