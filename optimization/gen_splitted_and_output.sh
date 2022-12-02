@@ -12,7 +12,7 @@ if [ ! -e "$(dirname "$outputSpace")" ]; then
 	NO_WRITE_OUTPUT_DIRS=1
 fi
 
-declare -i nFilesPerJob=16
+declare -i nFilesPerJob=8
 
 while IFS= read -r -d $'\0' file; do
 	echo "working on filelist $file" >&2
