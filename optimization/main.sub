@@ -1,7 +1,7 @@
 ##########################################################
 ## user setting area
 
-cwdSend               = /afs/cern.ch/work/y/yuehshun/private/Projects/ShamrockLee/ctau-proper/lxplus_HTcondor/preselect
+cwdSend               = /afs/cern.ch/work/y/yuehshun/private/Projects/fasyakhuza/MonoZtoLL/optimization
 originalListSpaceName = SkimmedFiles_2017Background_Lists
 listFile              = $(originalListSpaceName)_listfile.txt.tmp
 splittedListSpace     = $(originalListSpaceName)_splitted.tmp
