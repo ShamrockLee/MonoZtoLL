@@ -11,7 +11,7 @@ outputLogSpace        = $(originalListSpaceName)_outputlog.tmp
 # removing the "$(splittedListSpace)/" from the beginning and
 # the filename (basename) part of "$(inputFile)" plus the preceeding "/" from the end
 subdirOfInput         = $$([substr("$(inputFile)", size("$(splittedListSpace)") + 1, -(size("$Fn(inputFile)") + 4 + 1))])
-macroName             = xAna_monoZ_preselect
+macroName             = xAna_bkg_ztoee_forCheckSkimmedTree
 
 # +JobFlavour           = "longlunch"
 +JobFlavour           = "tomorrow"
