@@ -2,10 +2,11 @@
 
 source ./common_header.sh
 
-originalListSpace="/afs/cern.ch/work/y/yuehshun/private/Projects/ShamrockLee/ctau-proper/lxplus_HTcondor/preselect/ntuple_filelist"
+originalListSpaceName=SkimmedFiles_2017Background_Lists
+originalListSpace="/afs/cern.ch/work/y/yuehshun/private/Projects/fasyakhuza/MonoZtoLL/optimization/${originalListSpaceName}"
 # originalListSpace=./ntuple_filelist
-outputSpace=/eos/user/y/yuehshun/ntuple_filelist_output.tmp
-outputMergedSpace=/eos/user/y/yuehshun/ntuple_filelist_outputmerged.tmp
+outputSpace=/eos/user/y/yuehshun/${originalListSpaceName}_output.tmp
+outputMergedSpace=/eos/user/y/yuehshun/${originalListSpaceName}_outputmerged.tmp
 
 subDirRoot="";
 dryRun=0
@@ -61,7 +62,14 @@ END_OF_HELP
 		-??*)
 			manageShorthands
 			;;
-
+		-?)
+			echo "Unexpected flag $1"
+			exit 1
+			;;
+		*)
+			echo "Unexpected argumnet $1" >&2
+			exit 1
+			;;
 	esac
 done
 
@@ -75,7 +83,7 @@ if (( force )); then
 	forceArgArray=( "--force" )
 fi
 
-declare -a searchCommand=()
+declare -a searchCommand# If subDirRoot is empty, it will find "$originalListSpace"
 # If subDirRoot is empty, it will find "$originalListSpace"
 searchCommand+=( find "$originalListSpace${subDirRoot:+/$subDirRoot}" )
 if [[ -n "${minDepth:-}" ]]; then
