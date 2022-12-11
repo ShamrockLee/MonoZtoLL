@@ -1,8 +1,10 @@
+#include <cstring>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <queue>
 #include <algorithm>
+#include <regex>
 #include <TH1D.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -16,6 +18,13 @@
 #include <TTreeReader.h>
 #include <TError.h>
 using namespace std;
+
+// #define stringify_directly(x) #x
+// #define stringify_expanded(x) stringify_directly(x)
+
+#ifndef INCLUSIVE_SUPPORT
+#define INCLUSIVE_SUPPORT 1
+#endif
 
 void efferr(float nsig, float ntotal, float factor = 1)
 {
@@ -98,6 +107,41 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     fin.close();
     cout << "line" << line << endl;*/
 
+    bool isInclusive = false;
+    int inclusiveLowerBound = 0, inclusiveUpperBound = 0;
+    const char* inclusiveType = "";
+
+#if INCLUSIVE_SUPPORT
+    for (const char* inclusiveTypeCandidate: {"HT"})
+    {
+        const string strPatternPref = "DYJetsToLL";
+        regex rPatternPref(strPatternPref);
+        const string strPatternSuf = "-([0-9]+)to([0-9]+|Inf)[^0-9]";
+        regex rPatternExclusive(strPatternPref + "[^/]*_" + inclusiveTypeCandidate + strPatternSuf);
+        if (regex_search(vInputFilename[0], rPatternPref) && ! regex_search(vInputFilename[0], rPatternExclusive))
+        {
+            cmatch mBounds;
+            if(!regex_search(outputfile, mBounds, rPatternExclusive))
+            {
+                Fatal("xAna_bkg_ztoee_forCheckSkimmedTree", "inclusiveType found in vInputFilename[0] as \"%s\", but the pattern doesn't found in the outputfile specified.", inclusiveTypeCandidate);
+            }
+            inclusiveType = inclusiveTypeCandidate;
+            inclusiveLowerBound = stoi(mBounds[1].str());
+            inclusiveUpperBound = mBounds[2].compare("Inf") == 0 ? -1 : stoi(mBounds[2].str());
+            printf("matched %s, inclusiveLowerBound: %d, inclusiveUpperBound: %d\n", mBounds[0].str().c_str(), inclusiveLowerBound, inclusiveUpperBound);
+            break;
+        }
+    }
+    if (!isInclusive)
+    {
+        printf("Not inclusive.\n");
+    }
+    else
+    {
+        printf("inclusiveType: \"%s\"\n", inclusiveType);
+    }
+#endif
+
     //------------------
     // Create histrogram
     //------------------
@@ -109,6 +153,10 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
 
     TH1D *h_totevent = new TH1D("h_totevent", "total events", 5, 0, 5);
     h_totevent->Sumw2();
+
+    TH1D *h_HT = new TH1D("h_HT", "HT", 1000, 0, 1000.);
+    h_HT->GetXaxis()->SetTitle("HT");
+    h_HT->GetYaxis()->SetTitle("Number of Events");
 
     TH1F *h_HT_eventCout = new TH1F("h_HT_eventCout", "", 10, 0, 10);
     h_HT_eventCout->SetYTitle("N event");
@@ -276,8 +324,8 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     Int_t I_weight;
     ULong64_t I_eventID;
     Float_t f_Met;
-    //Float_t f_HT;
     //Float_t f_dileptonmass;
+    Float_t f_HT;
 
     Float_t f_goodElePt;
     Float_t f_goodEleMass;
@@ -346,6 +394,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     T_tree->Branch("I_weight", &I_weight);
     T_tree->Branch("I_eventID", &I_eventID);
     T_tree->Branch("f_Met", &f_Met);
+    if (strcmp(inclusiveType, "HT") == 0) T_tree->Branch("f_HT", &f_HT);
     //T_tree->Branch("f_HT", &f_HT);
     //T_tree->Branch("f_dileptonmass", &f_dileptonmass);
     T_tree->Branch("f_dileptonPT", &f_dileptonPT);
@@ -443,7 +492,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
         TreeReader data(vInputFilename.data(), vInputFilename.size(), "outTree");
         //TTreeReader data("outTree", file);
 
-        Long64_t nTotal = 0;
+        // Long64_t nTotal = 0;
         Long64_t nZboson = 0;
         int nEleBefore = 0;
         int nEleAfter = 0;
@@ -504,7 +553,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
             v_goodTauE.clear();
             
             data.GetEntry(jEntry);
-            nTotal ++;
+            // nTotal ++;
 
             Float_t mcWeight = data.GetFloat("mcweight");
             Double_t eventWeight = mcWeight;
@@ -520,6 +569,18 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                 {
                     eventWeight = 1;
                 }
+
+            // Inclusive range filtering (prior to the total event count and preselections)
+            if (isInclusive && strcmp(inclusiveType, "HT") == 0)
+            {
+                f_HT = -1.;
+                f_HT = data.GetFloat("st_HT");
+                if (f_HT < inclusiveLowerBound || (inclusiveUpperBound >= 0 && f_HT >= inclusiveUpperBound))
+                {
+                    continue;
+                }
+                h_HT->Fill(f_HT, eventWeight);
+            }
 
             //---------------------------
             // Get Total event number
@@ -960,6 +1021,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     // T_tree->Write();
     outFile->mkdir("Event_Variable", "Event_Variable")->cd();
     h_totevent->Write();
+    h_HT->Write();
     h_genee_event->Write();
     h_recoee_event->Write();
     h_ele_n->Write();
