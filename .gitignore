@@ -1,11 +1,22 @@
 ## Common / Custom
 
-# Temporary files / folders
-*.tmp
-*.temp
 
 # ROOT files
 *.root
+
+# Cing
+*_ACLiC_dict*
+*.pcm
+
+
+## Backup
+
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
 
 ## C++
 
