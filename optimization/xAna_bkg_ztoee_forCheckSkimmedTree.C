@@ -11,7 +11,7 @@
 #include <TClonesArray.h>
 #include <TLorentzVector.h>
 #include <TAxis.h>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <TTreeReader.h>
 #include <TError.h>
