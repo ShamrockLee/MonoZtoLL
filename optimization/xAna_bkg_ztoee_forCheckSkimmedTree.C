@@ -68,15 +68,15 @@ float cal_dphi(float phi1, float phi2)
 }
 
 void xAna_bkg_ztoee_forCheckSkimmedTree(const char *inputFilename = "../DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root", const char *outputfile = "outputEffCheck_DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.root");
-void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int nInputFilename, const char *outputfile);
+void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, const char* outputfile);
 
 void xAna_bkg_ztoee_forCheckSkimmedTree(const char *inputFilename, const char *outputfile)
 {
-    return xAna_bkg_ztoee_forCheckSkimmedTree(&inputFilename, 1, outputfile);
+    return xAna_bkg_ztoee_forCheckSkimmedTree(vector({ inputFilename }) , outputfile);
 }
 
 //void xAna_bkg_ztoee_forCheckSkimmedTree(string inputtxtFilename, string outputfile)
-void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int nInputFilename, const char *outputfile)
+void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, const char *outputfile)
 {
 
     //TFile *file = TFile::Open(inputFilename);
@@ -440,7 +440,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(const char **pInputFilename, const int n
 
         //get TTree from file ...
         //TreeReader data(inputFile.data());
-        TreeReader data(pInputFilename, 1, "outTree");
+        TreeReader data(vInputFilename.data(), vInputFilename.size(), "outTree");
         //TTreeReader data("outTree", file);
 
         Long64_t nTotal = 0;
@@ -1010,6 +1010,7 @@ int main(int argc, char **argv) {
         Error("xAna_bkg_ztoee_forCheckSkimmedTree.C:main", "Expect arguments OUTFILE INFILE1 [INFILE2 ...]");
         return 1;
     }
-    xAna_bkg_ztoee_forCheckSkimmedTree(const_cast<const char**>(argv) + 2, argc - 2, argv[1]);
+    const vector<const char*> vOutputFiles(argv + 2, argv + argc);
+    xAna_bkg_ztoee_forCheckSkimmedTree(vOutputFiles , argv[1]);
     return 0;
 }
