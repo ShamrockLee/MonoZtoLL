@@ -81,7 +81,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
 
 void xAna_bkg_ztoee_forCheckSkimmedTree(const char *inputFilename, const char *outputfile)
 {
-    return xAna_bkg_ztoee_forCheckSkimmedTree(vector({ inputFilename }) , outputfile);
+    return xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*>({ inputFilename }) , outputfile);
 }
 
 //void xAna_bkg_ztoee_forCheckSkimmedTree(string inputtxtFilename, string outputfile)
