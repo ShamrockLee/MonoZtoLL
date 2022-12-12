@@ -64,7 +64,7 @@ for (( iLower=0; iLower<"${#inclusiveBoundaries[@]}"-1; iLower++ )) {
 	subdir="${subdir/@UPPER@/${inclusiveBoundaries[$iLower+1]}}"
 	splittedListDir="$splittedListSpace/$subdir"
 	if [[ -d "$splittedListDir" ]]; then
-		find "$splittedListDir" -mindepth 1 -maxdepth 1 -type f,l -name "*_inclusive_*.txt" -delete
+		find "$splittedListDir" -mindepth 1 -maxdepth 1 -type f -name "*_inclusive_*.txt" -delete
 	else
 		mkdir -v "$splittedListDir"
 	fi
