@@ -54,7 +54,7 @@ when_to_transfer_output = ON_EXIT
 transfer_input_files    = dummy_transfer.txt
 transfer_output_files    = dummy_transfer.txt
 
-request_cpus            = 8
+# request_cpus            = 8
 request_memory          = 12288
 
 queue inputFile from $(listFile)
