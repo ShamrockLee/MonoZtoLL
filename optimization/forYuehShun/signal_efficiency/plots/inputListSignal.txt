@@ -1,0 +1,10 @@
+../output_signal_root/Mchi2-150_Mchi1-1_ctau0p1.root
+../output_signal_root/Mchi2-150_Mchi1-1_ctau1000p0.root
+../output_signal_root/Mchi2-150_Mchi1-1_ctau100p0.root
+../output_signal_root/Mchi2-150_Mchi1-1_ctau10p0.root
+../output_signal_root/Mchi2-150_Mchi1-1_ctau1p0.root
+../output_signal_root/Mchi2-1_Mchi1-0p1_ctau0p1.root
+../output_signal_root/Mchi2-1_Mchi1-0p1_ctau1000p0.root
+../output_signal_root/Mchi2-1_Mchi1-0p1_ctau100p0.root
+../output_signal_root/Mchi2-1_Mchi1-0p1_ctau10p0.root
+../output_signal_root/Mchi2-1_Mchi1-0p1_ctau1p0.root
