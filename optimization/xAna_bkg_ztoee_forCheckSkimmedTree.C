@@ -107,30 +107,35 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     fin.close();
     cout << "line" << line << endl;*/
 
+    int exclusiveLowerBound = 0, exclusiveUpperBound = 0;
+    const char* exclusiveType = "";
     bool isInclusive = false;
-    int inclusiveLowerBound = 0, inclusiveUpperBound = 0;
-    const char* inclusiveType = "";
 
 #if INCLUSIVE_SUPPORT
-    for (const char* inclusiveTypeCandidate: {"HT"})
-    {
-        const string strPatternPref = "DYJetsToLL";
-        regex rPatternPref(strPatternPref);
+    const string strPatternDY = "DYJetsToLL";
+    if (regex_search(vInputFilename[0], regex(strPatternDY))) {
         const string strPatternSuf = "-([0-9]+)to([0-9]+|Inf)[^0-9]";
-        regex rPatternExclusive(strPatternPref + "[^/]*_" + inclusiveTypeCandidate + strPatternSuf);
-        if (regex_search(vInputFilename[0], rPatternPref) && ! regex_search(vInputFilename[0], rPatternExclusive))
+        isInclusive = true;
+        for (const char* inclusiveTypeCandidate: {"HT"})
         {
-            cmatch mBounds;
-            if(!regex_search(outputfile, mBounds, rPatternExclusive))
-            {
-                Fatal("xAna_bkg_ztoee_forCheckSkimmedTree", "inclusiveType found in vInputFilename[0] as \"%s\", but the pattern doesn't found in the outputfile specified.", inclusiveTypeCandidate);
+            printf("Trying inclusiveTypeCandidate %s\n", inclusiveTypeCandidate);
+            regex rPatternExclusive(strPatternDY + "[^/]*_" + inclusiveTypeCandidate + strPatternSuf);
+            if (regex_search(vInputFilename[0], rPatternExclusive)) {
+                isInclusive = false;
+                break;
             }
-            inclusiveType = inclusiveTypeCandidate;
-            inclusiveLowerBound = stoi(mBounds[1].str());
-            inclusiveUpperBound = mBounds[2].compare("Inf") == 0 ? -1 : stoi(mBounds[2].str());
-            printf("matched %s, inclusiveLowerBound: %d, inclusiveUpperBound: %d\n", mBounds[0].str().c_str(), inclusiveLowerBound, inclusiveUpperBound);
+            cmatch mBounds;
+            if(!regex_search(outputfile, mBounds, rPatternExclusive)) continue;
+            exclusiveType = inclusiveTypeCandidate;
+            exclusiveLowerBound = stoi(mBounds[1].str());
+            exclusiveUpperBound = mBounds[2].compare("Inf") == 0 ? -1 : stoi(mBounds[2].str());
+            printf("matched %s, exclusiveLowerBound: %d, exclusiveUpperBound: %d\n", mBounds[0].str().c_str(), exclusiveLowerBound, exclusiveUpperBound);
             break;
         }
+        if (isInclusive && exclusiveType[0] == '\0')
+            {
+                Fatal("xAna_bkg_ztoee_forCheckSkimmedTree", "vInputFilename[0] appears an inclusive %s dataset, but the exclusive range and type is absent in the outputfile.", strPatternDY.c_str());
+            }
     }
     if (!isInclusive)
     {
@@ -138,7 +143,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     }
     else
     {
-        printf("inclusiveType: \"%s\"\n", inclusiveType);
+        printf("exclusiveType: \"%s\"\n", exclusiveType);
     }
 #endif
 
@@ -394,7 +399,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     T_tree->Branch("I_weight", &I_weight);
     T_tree->Branch("I_eventID", &I_eventID);
     T_tree->Branch("f_Met", &f_Met);
-    if (strcmp(inclusiveType, "HT") == 0) T_tree->Branch("f_HT", &f_HT);
+    if (strcmp(exclusiveType, "HT") == 0) T_tree->Branch("f_HT", &f_HT);
     //T_tree->Branch("f_HT", &f_HT);
     //T_tree->Branch("f_dileptonmass", &f_dileptonmass);
     T_tree->Branch("f_dileptonPT", &f_dileptonPT);
@@ -571,11 +576,11 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                 }
 
             // Inclusive range filtering (prior to the total event count and preselections)
-            if (isInclusive && strcmp(inclusiveType, "HT") == 0)
+            if (isInclusive && strcmp(exclusiveType, "HT") == 0)
             {
                 f_HT = -1.;
                 f_HT = data.GetFloat("st_HT");
-                if (f_HT < inclusiveLowerBound || (inclusiveUpperBound >= 0 && f_HT >= inclusiveUpperBound))
+                if (f_HT < exclusiveLowerBound || (exclusiveUpperBound >= 0 && f_HT >= exclusiveUpperBound))
                 {
                     continue;
                 }
