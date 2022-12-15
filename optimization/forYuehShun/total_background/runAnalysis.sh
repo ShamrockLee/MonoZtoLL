@@ -17,7 +17,7 @@ root -b -q ./xAna_pre_Zpt_optimization_bkg.C++\(\"${inputfile}\",\"$2\"\)
 echo "finish the code"
 if [ -e "$2" ]; then
   #until xrdcp -f "$2" root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/fkhuzaim/ZpT_Optimization/"$2"; do
-  until xrdcp -f "$2" /eos/user/f/fkhuzaim/MET_Optimization/"$2"; do
+  until xrdcp -f "$2" /eos/user/y/yuehshun/reproduction_bkg/"$2"; do
   #until xrdcp -f "$2" root://se01.grid.nchc.org.tw//dpm/grid.nchc.org.tw/home/cms/store/user/fkhuzaim/test/"$2"; do
     sleep 60
     echo "Retrying"  

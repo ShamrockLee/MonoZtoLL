@@ -1,6 +1,6 @@
 universe = vanilla
 Proxy_filename = x509up
-Proxy_path = /afs/cern.ch/user/f/fkhuzaim/private/$(Proxy_filename)
+Proxy_path = /afs/cern.ch/user/y/yuehshun/private/$(Proxy_filename)
 #request_memory = 8192
 #request_cpus = 4
 +JobFlavour = "nextweek"
