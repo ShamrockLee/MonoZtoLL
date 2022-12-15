@@ -2,7 +2,7 @@
 
 dateAndtime=`date +'%Y-%m-%d-%H-%M-%S'`
 linesPerFile=4
-is_DY_inclusive="false"
+is_DY_inclusive="true"
 
 inputdir="SkimmedFiles_2017Background_Lists"
 if [ $is_DY_inclusive == "true" ]; then
