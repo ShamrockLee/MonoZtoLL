@@ -80,7 +80,7 @@ done
 
 declare -a forceArgArray=()
 if (( force )); then
-	forceArgArray=( "--force" )
+	forceArgArray=( "-f" )
 fi
 
 declare -a searchCommand=()
