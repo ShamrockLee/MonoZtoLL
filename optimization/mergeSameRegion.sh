@@ -101,7 +101,7 @@ while IFS= read -r -d $'\0' pathOriginalList; do
 	declare -a filesToMerge=()
 	if [[ ! -d "$outputSpace$subDirPlusPrefSlash" && ! ( -L "$outputSpace$subDirPlusPrefSlash" && -d "$(realpath "$outputSpace$subDirPlusPrefSlash")" ) ]]; then
 		echo "$outputSpace$subDirPlusPrefSlash is not a directory / a symlink to a directory" >&2
-		exit 1
+		# exit 1
 	fi
 	filesToMerge=()
 	while IFS= read -r -d $'\0' file; do
