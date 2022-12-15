@@ -113,6 +113,9 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     h_HT_eventCount->SetYTitle("N event");
     h_HT_eventCount->Sumw2();
 
+    TH1D* h_Zpt_after_preselection_bkg = new TH1D("h_Zpt_after_preselection_bkg", "Z pT After Preselection", 100, 0, 1000);
+    h_Zpt_after_preselection_bkg->Sumw2();
+
     TH1D* h_before_Zpt_bkg = new TH1D("h_before_Zpt_bkg", "nEvents before any Zpt cut", 5, 0, 5);
     h_before_Zpt_bkg->Sumw2();
 
@@ -125,35 +128,43 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     TH1D* h_after_Zpt100_bkg = new TH1D("h_after_Zpt100_bkg", "After Z pT cut >=100 GeV", 5, 0, 5);
     h_after_Zpt100_bkg->Sumw2();
 
-    TH1D* h_after_Zpt_scan_bkg = new TH1D("h_after_Zpt_scan_bkg", "After Z pt cut scanning", 100, 0, 100);
+    TH1D* h_after_Zpt_scan_bkg = new TH1D("h_after_Zpt_scan_bkg", "After Z pt cut scanning", 100, 0, 1000);
     h_after_Zpt_scan_bkg->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT0to70 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT0to70", "After Z pt cut scanning HT0to70", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT0to70 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT0to70", "After Z pt cut scanning HT0to70", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT0to70->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT70to100 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT70to100", "After Z pt cut scanning HT70to100", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT70to100 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT70to100", "After Z pt cut scanning HT70to100", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT70to100->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT100to200 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT100to200", "After Z pt cut scanning HT100to200", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT100to200 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT100to200", "After Z pt cut scanning HT100to200", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT100to200->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT200to400 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT200to400", "After Z pt cut scanning HT200to400", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT200to400 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT200to400", "After Z pt cut scanning HT200to400", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT200to400->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT400to600 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT400to600", "After Z pt cut scanning HT400to600", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT400to600 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT400to600", "After Z pt cut scanning HT400to600", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT400to600->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT600to800 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT600to800", "After Z pt cut scanning HT600to800", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT600to800 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT600to800", "After Z pt cut scanning HT600to800", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT600to800->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT800to1200 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT800to1200", "After Z pt cut scanning HT800to1200", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT800to1200 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT800to1200", "After Z pt cut scanning HT800to1200", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT800to1200->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT1200to2500 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT1200to2500", "After Z pt cut scanning HT1200to2500", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT1200to2500 = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT1200to2500", "After Z pt cut scanning HT1200to2500", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Sumw2();
 
-    TH1D *h_after_Zpt_scan_bkg_DYincl_HT2500toInf = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT2500toInf", "After Z pt cut scanning HT2500toInf", 100, 0, 100);
+    TH1D *h_after_Zpt_scan_bkg_DYincl_HT2500toInf = new TH1D("h_after_Zpt_scan_bkg_DYincl_HT2500toInf", "After Z pt cut scanning HT2500toInf", 100, 0, 1000);
     h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Sumw2();
+
+    TH1F *h_ee_npass = new TH1F("h_ee_npass", "", 10, 0, 10);
+    h_ee_npass->SetXTitle("npass");
+    h_ee_npass->Sumw2();
+
+    TH1D *h_ee_npass_noweight = new TH1D("h_ee_npass_noweight", "", 10, 0, 10);
+    h_ee_npass_noweight->SetXTitle("npass");
+    h_ee_npass_noweight->Sumw2();
 
 
     //----------------------
@@ -227,7 +238,7 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
 
     TString outputfile(outputtxtFilename);
 
-    TFile *outFile = TFile::Open(outputfile, "RECREATE");
+    //TFile *outFile = TFile::Open(outputfile, "RECREATE");
     TTree *tree = new TTree("tree", "Tree");
     tree->Branch("I_event", &I_event);
     tree->Branch("I_weight", &I_weight);
@@ -294,18 +305,11 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     tree->Branch("v_goodTauPz", &v_goodTauPz);
     tree->Branch("v_goodTauE", &v_goodTauE);*/
 
-    //Declare other variables
-    vector<double> vec_bkgEffLow;
-    vector<double> vec_bkgEffMed;
-    vector<double> vec_bkgEffHigh;
-
-    vector<double> vec_PunziSigLow;
-    vector<double> vec_PunziSigMed;
-    vector<double> vec_PunziSigHigh;
 
     h_totevent->Reset();
     h_total_mcweight_new->Reset();
     h_HT_eventCount->Reset();
+    h_Zpt_after_preselection_bkg->Reset();
     h_before_Zpt_bkg->Reset();
     h_after_Zpt50_bkg->Reset();
     h_after_Zpt60_bkg->Reset();
@@ -320,11 +324,10 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     h_after_Zpt_scan_bkg_DYincl_HT800to1200->Reset();
     h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Reset();
     h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Reset();
+    h_ee_npass->Reset();
+    h_ee_npass_noweight->Reset();
     
 
-    double nEventsBkgLow = 0.;
-    double nEventsBkgMed = 0.;
-    double nEventsBkgHigh = 0.;
 
     ifstream flist(inputtxtFilename.data());
     string inputFile;
@@ -640,14 +643,16 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                 if (recoeeEvent)
                 {
                     //h_recoee_event->Fill(1, eventWeight);
-                    //h_ee_npass->Fill(1, eventWeight);
+                    h_ee_npass->Fill(1, eventWeight);
+                    h_ee_npass_noweight->Fill(1);
 
                     // 3. Good Vertex
                     Long64_t nVtx = data.GetLong64("st_nVtx");
                     if (nVtx < 1)
                         continue;
                     //h_recoee_Vtxpass->Fill(1, eventWeight);
-                    //h_ee_npass->Fill(2, eventWeight);
+                    h_ee_npass->Fill(2, eventWeight);
+                    h_ee_npass_noweight->Fill(2);
 
                     // 4. Tau Veto
                     //Long64_t nTau_DRBased_EleVeto = data.GetLong64("st_nTau_DRBased_EleMuVeto");
@@ -655,14 +660,16 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                     if (nTau_DRBased_EleVeto > 0)
                         continue;
                     //h_recoee_vetoTau->Fill(1, eventWeight);
-                    //h_ee_npass->Fill(3, eventWeight);
+                    h_ee_npass->Fill(3, eventWeight);
+                    h_ee_npass_noweight->Fill(3);
 
                     // 6. Z boson
                     if (goodElectrons[0].Pt() < 25 && goodElectrons[1].Pt() < 20)
                     {
                         continue;
                     }
-                    //h_ee_npass->Fill(4, eventWeight);
+                    h_ee_npass->Fill(4, eventWeight);
+                    h_ee_npass_noweight->Fill(4);
                     //h_recoee_eePtpass->Fill(1, eventWeight);
 
                     float PDGZmass = 91.1876;
@@ -673,7 +680,8 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                     {
                         continue;
                     }
-                    //h_ee_npass->Fill(5, eventWeight);
+                    h_ee_npass->Fill(5, eventWeight);
+                    h_ee_npass_noweight->Fill(5);
                     //h_recoee_deltaMasspass->Fill(1, eventWeight);
             
                     //----------------------
@@ -684,7 +692,8 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                         continue;
                     }
                     //h_Zboson_n->Fill(1, eventWeight);
-                    //h_ee_npass->Fill(6, eventWeight);
+                    h_ee_npass->Fill(6, eventWeight);
+                    h_ee_npass_noweight->Fill(6);
                     nZboson ++;
 
                     TLorentzVector Zboson = goodElectrons[0] + goodElectrons[1];
@@ -701,7 +710,7 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                     Float_t* THINjetEnergy = data.GetPtrFloat("st_THINjetEnergy");
                     Int_t* THINjetHadronFlavor = data.GetPtrInt("st_THINjetHadronFlavor");
                     Float_t* THINjetCSV = data.GetPtrFloat("st_THINjetCISVV2");
-                    vector<int> indexForPassAK4;
+                    /*vector<int> indexForPassAK4;
                     indexForPassAK4.clear();
                     vector<TLorentzVector> goodTHINjets;
                     goodTHINjets.clear();
@@ -719,8 +728,87 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                     sort(goodTHINjets.begin(), goodTHINjets.end(), pt_greater);
                     
                     //h_recoee_nAK4pass->Fill(1, eventWeight); //add this -> write in tree
-                    //h_ee_npass->Fill(7, eventWeight);
+                    h_ee_npass->Fill(7, eventWeight);
+                    h_ee_npass_noweight->Fill(7);*/
+                    h_Zpt_after_preselection_bkg->Fill(Zboson.Pt(), eventWeight);
                     //nEventAfterAllPreselection ++;
+
+
+                    //APPLYING SEVERAL Z PT CUTS//
+                    //declare the h_low_Zpt, h_med_Zpt, and h_high_Zpt first
+                    h_before_Zpt_bkg->Fill(1, eventWeight);
+
+                    int cutvalue = 0;
+                    int discrepancy = 10;
+                    //int tempvalue = 0;
+
+                    while (cutvalue<1000)
+                    {
+                        cutvalue+=discrepancy;
+                        //tempvalue+=1;
+                        if (Zboson.Pt() > cutvalue)
+                        {
+                            //h_after_Zpt_scan_bkg->Fill(tempvalue, eventWeight);
+                            h_after_Zpt_scan_bkg->Fill(cutvalue, eventWeight);
+
+                            if (HT < 70)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT0to70->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT0to70->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 70 && HT < 100)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT70to100->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT70to100->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 100 && HT < 200)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT100to200->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT100to200->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 200 && HT < 400)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT200to400->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT200to400->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 400 && HT < 600)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT400to600->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT400to600->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 600 && HT < 800)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT600to800->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT600to800->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 800 && HT < 1200)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT800to1200->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT800to1200->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 1200 && HT < 2500)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Fill(cutvalue, eventWeight);
+                            }
+                            else if (HT >= 2500)
+                            {
+                                //h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Fill(tempvalue, eventWeight);
+                                h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Fill(cutvalue, eventWeight);
+                            }
+                        }
+                    }
+
+                    if (Zboson.Pt() > 50)
+                        h_after_Zpt50_bkg->Fill(1, eventWeight);
+
+                    if (Zboson.Pt() > 60)
+                        h_after_Zpt60_bkg->Fill(1, eventWeight);
+
+                    if (Zboson.Pt() >= 100)
+                        h_after_Zpt100_bkg->Fill(1, eventWeight);
+
+
 
                     //---------------------------
                     // Study match Jet's tracks of Thin Jets
@@ -790,69 +878,6 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
                     } //end of ak4jet loop for emerg track (emerg jet)
                     
 
-                    //APPLYING SEVERAL Z PT CUTS//
-                    //declare the h_low_Zpt, h_med_Zpt, and h_high_Zpt first
-                    h_before_Zpt_bkg->Fill(1, eventWeight);
-
-                    int cutvalue = 0;
-                    int discrepancy = 10;
-                    int tempvalue = 0;
-
-                    while (cutvalue<1000)
-                    {
-                        cutvalue+=discrepancy;
-                        tempvalue+=1;
-                        if (Zboson.Pt() > cutvalue)
-                            {
-                                h_after_Zpt_scan_bkg->Fill(tempvalue, eventWeight);
-
-                                if (HT < 70)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT0to70->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 70 && HT < 100)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT70to100->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 100 && HT < 200)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT100to200->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 200 && HT < 400)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT200to400->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 400 && HT < 600)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT400to600->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 600 && HT < 800)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT600to800->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 800 && HT < 1200)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT800to1200->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 1200 && HT < 2500)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Fill(tempvalue, eventWeight);
-                                }
-                                else if (HT >= 2500)
-                                {
-                                    h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Fill(tempvalue, eventWeight);
-                                }
-                            }
-                    }
-
-                    if (Zboson.Pt() > 50)
-                        h_after_Zpt50_bkg->Fill(1, eventWeight);
-
-                    if (Zboson.Pt() > 60)
-                        h_after_Zpt60_bkg->Fill(1, eventWeight);
-
-                    if (Zboson.Pt() >= 100)
-                        h_after_Zpt100_bkg->Fill(1, eventWeight);
 
                     //Store the result in outputfile (root)
                     //---------------------------
@@ -879,11 +904,13 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
 
     // out Tree branches
     //TFile *outFile = new TFile(outputfile.c_str(), "RECREATE");
+    TFile *outFile = TFile::Open(outputfile, "RECREATE");
     outFile->cd();
     tree->Write();
     h_totevent->Write();
     h_total_mcweight_new->Write();
     h_HT_eventCount->Write();
+    h_Zpt_after_preselection_bkg->Write();
     h_before_Zpt_bkg->Write();
     h_after_Zpt50_bkg->Write();
     h_after_Zpt60_bkg->Write();
@@ -898,6 +925,8 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     h_after_Zpt_scan_bkg_DYincl_HT800to1200->Write();
     h_after_Zpt_scan_bkg_DYincl_HT1200to2500->Write();
     h_after_Zpt_scan_bkg_DYincl_HT2500toInf->Write();
+    h_ee_npass->Write();
+    h_ee_npass_noweight->Write();
     //outFile->mkdir("Event_Variable", "Event_Variable")->cd();
     
     //h_genee_event->Write();
@@ -943,41 +972,6 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     cout << "output written to " << outputfile << endl;
     //end = time.clock()
     //print "%.4gs" % (end-start)
-
-
-    //STARTING Z PT OPTIMIZATION//
-
-    //get the h_total_mcweight first
-    //h_total_mcweight = static_cast<TH1F*>(file->Get("h_total_mcweight"));
-    /*double totalMCevents = h_total_mcweight->Integral();
-    cout << "h_total_mcweight: " << totalMCevents << endl;
-
-    if ((inputFile).find("wgen_Vector_MonoZLL_NLO_Mphi-500_Mchi2") != std::string::npos)
-    {
-        //calculate the efficiency of h_low, h_med, h_high
-        double signalEfflow = (h_low_Zpt_bkg->Integral())/totalMCevents;
-
-        double signalEffmedium = (h_med_Zpt_bkg->Integral())/totalMCevents;
-
-        double signalEffhigh = (h_high_Zpt_bkg->Integral())/totalMCevents;
-
-        //save signalEfflow, med, high in each list/vector
-        vec_bkgEffLow.push_back(signalEfflow);
-        vec_bkgEffMed.push_back(signalEffmedium);
-        vec_bkgEffHigh.push_back(signalEffhigh);
-    }
-
-    else
-    {
-        nEventsBkgLow = (h_low_Zpt_bkg->Integral()) * 6077.22 * 40.5 * 1000 / totalMCevents;
-        //sumnEventsBkgLow
-
-        nEventsBkgMed = (h_med_Zpt_bkg->Integral()) * 6077.22 * 40.5 * 1000 / totalMCevents;
-        //sumnEventsBkgMed
-
-        nEventsBkgHigh = (h_high_Zpt_bkg->Integral()) * 6077.22 * 40.5 * 1000 / totalMCevents;
-        //sumnEventsBkgHigh
-    }*/
 
 
     /*cout << "nEleBefore = " << nEleBefore << "\n";
@@ -1057,23 +1051,7 @@ void xAna_pre_Zpt_optimization_DYincl(string inputtxtFilename, string outputtxtF
     //cout << "efficiency of weighted Events with AK4 >= 2 compared to reco-lev ee:" << "\n";
     //efferr(nrecoee_events_nAK4pass, nrecoee_event);*/
 
-    
-
-    //calculcate Punzi Significance// out flist loop
-    /*for (int is = 0; is < vec_bkgEffLow.size(); is++)
-    {
-        double PunziSigLow = vec_bkgEffLow[is] / (1 + sqrt(nEventsBkgLow));
-
-        double PunziSigMed = vec_bkgEffMed[is] / (1 + sqrt(nEventsBkgMed));
-
-        double PunziSigHigh = vec_bkgEffHigh[is] / (1 + sqrt(nEventsBkgHigh));
-
-        vec_PunziSigLow.push_back(PunziSigLow);
-        vec_PunziSigMed.push_back(PunziSigMed);
-        vec_PunziSigHigh.push_back(PunziSigHigh);
-    }*/
-
-    
+  
     
 
     
