@@ -73,10 +73,10 @@ END_OF_HELP
 	esac
 done
 
-if [[ -z "$subDirRoot" ]]; then
-	echo "subDirRoot is usually not set as empty." >&2
-	echo "Set it with --subdir subDirRoot" >&2
-fi
+# if [[ -z "$subDirRoot" ]]; then
+# 	echo "subDirRoot is usually not set as empty." >&2
+# 	echo "Set it with --subdir subDirRoot" >&2
+# fi
 
 declare -a forceArgArray=()
 if (( force )); then
