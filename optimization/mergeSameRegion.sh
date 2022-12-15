@@ -83,7 +83,7 @@ if (( force )); then
 	forceArgArray=( "--force" )
 fi
 
-declare -a searchCommand = ()
+declare -a searchCommand=()
 # If subDirRoot is empty, it will find "$originalListSpace"
 searchCommand+=( find "$originalListSpace${subDirRoot:+/$subDirRoot}" )
 if [[ -n "${minDepth:-}" ]]; then
