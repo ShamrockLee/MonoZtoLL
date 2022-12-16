@@ -4,14 +4,14 @@
 dateAndtime=`date +'%Y-%m-%d-%H-%M-%S'`
 stringSearch="written"
 
-is_checkFailedJobs="true"
-is_DY_inclusive="false"
+is_checkFailedJobs="false"
+is_DY_inclusive="true"
 
 
-splited_listdir="tempSplittedSubmitFilelists_2022-12-13-11-27-15" #change this to be the folder of input files that you have submitted and you want to resubmit
+splited_listdir="tempSplittedSubmitFilelists_2022-12-15-20-12-54" #change this to be the folder of input files that you have submitted and you want to resubmit
 
-firstjobId="2675258" #change this to be the FIRST job Id of your oldSubmitDir; you can check your logsubmit.txt
-lastjobId="2675297"  #change this to be the LAST job Id of your oldSubmitDir; you can check your logsubmit.txt
+firstjobId="14640759" #change this to be the FIRST job Id of your oldSubmitDir; you can check your logsubmit.txt
+lastjobId="14640797"  #change this to be the LAST job Id of your oldSubmitDir; you can check your logsubmit.txt
 
 nFail=0
 
