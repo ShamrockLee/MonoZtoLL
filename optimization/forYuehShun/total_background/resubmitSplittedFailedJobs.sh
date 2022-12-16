@@ -10,8 +10,8 @@ is_DY_inclusive="true"
 
 splited_listdir="tempSplittedSubmitFilelists_2022-12-15-20-12-54" #change this to be the folder of input files that you have submitted and you want to resubmit
 
-firstjobId="14640759" #change this to be the FIRST job Id of your oldSubmitDir; you can check your logsubmit.txt
-lastjobId="14640797"  #change this to be the LAST job Id of your oldSubmitDir; you can check your logsubmit.txt
+firstjobId="14640832" #change this to be the FIRST job Id of your oldSubmitDir; you can check your logsubmit.txt
+lastjobId="14640834"  #change this to be the LAST job Id of your oldSubmitDir; you can check your logsubmit.txt
 
 nFail=0
 
