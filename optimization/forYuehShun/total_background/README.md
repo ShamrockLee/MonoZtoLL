@@ -63,6 +63,12 @@ Run the following command to see the status:
 
 If you want to ONLY check the failed jobs without resubmitting them, you can change ```line 6``` of resubmitSplittedFailedJobs.sh to be true ```is_checkFailedJobs="true"```.
 
+Change the folder name in ```line 11``` of resubmitSplittedFailedJobs.sh file to be your ```tempSplittedSubmitFilelists_YYYY-mm-dd-HH-MM-SS``` folder name that you have submitted and you want to resubmit
+
+Change the FIRST job Id in ```line 13``` of resubmitSplittedFailedJobs.sh file to be your FIRST job Id of ```tempSplittedSubmitFilelists_YYYY-mm-dd-HH-MM-SS```; you can check the job id in your ```logsubmit_YYYY-MM-DD-HH-MM-SS.log```
+
+Change the LAST job Id in ```line 14``` of resubmitSplittedFailedJobs.sh file to be your LAST job Id of ```tempSplittedSubmitFilelists_YYYY-mm-dd-HH-MM-SS```; you can check the job id in your ```logsubmit_YYYY-MM-DD-HH-MM-SS.log```
+
 Then, run the script
 
 ```
@@ -113,8 +119,6 @@ cd haddFiles/
 ```
 
 Then, change ```line 2``` of haddBackground.sh to be the folder path you located your output in your CERN EOS.
-
-After that, change ```line 5``` of haddBackground.sh to be the folder path to place the output of the merged files.
 
 Run for merging
 ```
