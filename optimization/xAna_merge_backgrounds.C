@@ -4,6 +4,7 @@
 #include <TString.h>
 
 #include <string>
+#include <iostream>
 
 #include "Cross_section.h"
 
@@ -15,44 +16,52 @@ std::string GetGGName(const std::string product) {
     return "GluGluToContinToZZTo" + product + "_TuneCP5_13TeV-mcfm701-pythia8";
 }
 
-void xAna_merge_backgrounds(const char *outputFile="/eos/user/y/yuehshun/merged_SkimmedFiles_2017Background.root", const char *outputMergedSpace="/eos/user/y/yuehshun/SkimmedFiles_2017Background_Lists_outputmerged");
+void xAna_merge_backgrounds(const char *outputFile="/eos/user/y/yuehshun/merged_SkimmedFiles_2017Background.root", const char *outputMergedSpace="/eos/user/y/yuehshun/SkimmedFiles_2017Background_Lists_outputmerged.tmp");
 void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpace) {
     const std::string commonFilenameSuffix = "_merged.root";
-    const std::string tSubDir = "Event_Variable";
+    const std::string tSubDir = "Kinematics_Variable_afterEachLeptonSelection";
 
     TH1 *h_ZbosonPt = nullptr;
     TH1 *h_pfMetCorrPt = nullptr;
     TH2 *h2_ZbosonPt_pfMetCorrPt = nullptr;
 
     auto f_addup = [&h_ZbosonPt, &h_pfMetCorrPt, &h2_ZbosonPt_pfMetCorrPt, &outputMergedSpace, &tSubDir, &commonFilenameSuffix](const std::string inputFilename, const Float_t xsec) {
-        TFile *tfToAdd = TFile::Open((outputMergedSpace + inputFilename + commonFilenameSuffix).c_str());
-        TH1 *h_totevent = tfToAdd->Get<TH1>((tSubDir + "/h_totevent").c_str());
-        const Double_t corr = GlobalConstants::Lumi2017 * xsec / h_totevent->GetBinContent(1);
+        TFile *tfToAdd = TFile::Open((outputMergedSpace + std::string("/") + inputFilename + commonFilenameSuffix).c_str());
+        TH1 *h_totevent = tfToAdd->Get<TH1>("Event_Variable/h_totevent");
+        std::cerr << "Cross section: " << xsec << std::endl;
+        std::cerr << "Total event before preselection: " << h_totevent->GetBinContent(2) << std::endl;
+        const Double_t corr = GlobalConstants::Lumi2017 * xsec / h_totevent->GetBinContent(2);
         h_totevent->Delete();
         TH1 *h_ZbosonPtToAdd = tfToAdd->Get<TH1>((tSubDir + "/h_ZbosonPt").c_str());
+        h_ZbosonPtToAdd->Sumw2();
         h_ZbosonPtToAdd->Scale(corr);
         if (h_ZbosonPt) {
             h_ZbosonPt->Add(h_ZbosonPtToAdd);
+            h_ZbosonPtToAdd->Delete();
         } else {
-            h_ZbosonPt = static_cast<TH1 *>(h_ZbosonPtToAdd->Clone("h_ZbosonPt"));
+            h_ZbosonPt = h_ZbosonPtToAdd;
+            h_ZbosonPt->SetDirectory(0);
         }
-        h_ZbosonPtToAdd->Delete();
         TH1 *h_pfMetCorrPtToAdd = tfToAdd->Get<TH1>((tSubDir + "/h_pfMetCorrPt").c_str());
+        h_pfMetCorrPtToAdd->Sumw2();
         h_pfMetCorrPtToAdd->Scale(corr);
         if (h_pfMetCorrPt) {
             h_pfMetCorrPt->Add(h_pfMetCorrPtToAdd);
+            h_pfMetCorrPtToAdd->Delete();
         } else {
-            h_pfMetCorrPt = static_cast<TH1 *>(h_pfMetCorrPtToAdd->Clone("h_pfMetCorrPt"));
+            h_pfMetCorrPt = h_pfMetCorrPtToAdd;
+            h_pfMetCorrPt->SetDirectory(0);
         }
-        h_pfMetCorrPtToAdd->Delete();
         TH2 *h2_ZbosonPt_pfMetCorrPt_ToAdd = tfToAdd->Get<TH2>((tSubDir + "/h2_ZbosonPt_pfMetCorrPt").c_str());
+        h2_ZbosonPt_pfMetCorrPt_ToAdd->Sumw2();
         h2_ZbosonPt_pfMetCorrPt_ToAdd->Scale(corr);
         if (h2_ZbosonPt_pfMetCorrPt) {
             h2_ZbosonPt_pfMetCorrPt->Add(h2_ZbosonPt_pfMetCorrPt_ToAdd);
+            h2_ZbosonPt_pfMetCorrPt_ToAdd->Delete();
         } else {
-            h2_ZbosonPt_pfMetCorrPt = static_cast<TH2 *>(h2_ZbosonPt_pfMetCorrPt_ToAdd->Clone("h2_ZbosonPt_pfMetCorrPt"));
+            h2_ZbosonPt_pfMetCorrPt = h2_ZbosonPt_pfMetCorrPt_ToAdd;
+            h2_ZbosonPt_pfMetCorrPt->SetDirectory(0);
         }
-        h2_ZbosonPt_pfMetCorrPt_ToAdd->Delete();
         tfToAdd->Close();
     };
 
@@ -80,7 +89,7 @@ void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpac
     f_addup("TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8", GlobalConstants::TTWJetsToLNu_CS);
     f_addup("TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8", GlobalConstants::TTWJetsToQQ_CS);
     f_addup("TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8", GlobalConstants::TTZToLLNuNu_CS);
-    f_addup("TTZToQQ_M-10_TuneCP5_13TeV-amcatnlo-pythia8", GlobalConstants::TTZToQQ_CS);
+    f_addup("TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8", GlobalConstants::TTZToQQ_CS);
     f_addup("WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8", GlobalConstants::qq_WW_2L2Nu_CS);
     f_addup("WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8", GlobalConstants::WWZ_CS);
     f_addup("WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8", GlobalConstants::WZ_3LNu_CS);
