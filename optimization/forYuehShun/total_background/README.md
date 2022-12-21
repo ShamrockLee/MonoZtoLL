@@ -2,6 +2,8 @@
 
 A set of scripts to submit jobs to HTCondor for applying preselections to background samples for Z pT optimization
 
+*Note: The preselections used in this folder do not include the AK4jets preselctions.*
+
 
 ## A. Setup environment
 
@@ -123,4 +125,20 @@ Then, change ```line 2``` of haddBackground.sh to be the folder path you located
 Run for merging
 ```
 . haddBackground.sh
+```
+
+
+# IV. Make the plot of total number of events from all backgrounds
+
+First of all, make a text file that contains the list of the merged output root files in your CERN EOS using below command. 
+```
+cd plots/
+
+ls pathOfYourMergedOutput/* > inputListBkg.txt
+```
+(For example: I run "ls /eos/user/f/fkhuzaim/MET_Optimization/merge_output/* > inputListBkg.txt" to get the text file)
+
+Once you have the text file, you can run the macro to produce the plot using below command
+```
+root -l xPlot_background_wDYincl.C
 ```
