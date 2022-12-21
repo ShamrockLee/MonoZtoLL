@@ -54,7 +54,7 @@ TH1 *GetHistCumulativeIncExc(const TH1 *hIn, const Bool_t forward, const char *s
                      esum -= hintegrated->GetSumw2()->GetAt(hintegrated->GetBin(binx - 1, biny, binz - 1));
                   if (binz != firstZ && biny != firstY && binx != firstX)
                      esum += hintegrated->GetSumw2()->GetAt(hintegrated->GetBin(binx - 1, biny - 1, binz - 1));
-                  hintegrated->GetSumw2()->SetAt(bin, esum);
+                  hintegrated->GetSumw2()->SetAt(esum, bin);
                }
             }
          }
@@ -96,7 +96,7 @@ TH1 *GetHistCumulativeIncExc(const TH1 *hIn, const Bool_t forward, const char *s
                      esum -= hintegrated->GetSumw2()->GetAt(hintegrated->GetBin(binx + 1, biny, binz + 1));
                   if (binz != lastZ && biny != lastY && binx != lastX)
                      esum += hintegrated->GetSumw2()->GetAt(hintegrated->GetBin(binx + 1, biny + 1, binz + 1));
-                  hintegrated->GetSumw2()->SetAt(bin, esum);
+                  hintegrated->GetSumw2()->SetAt(esum, bin);
                }
             }
          }
