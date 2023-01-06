@@ -114,11 +114,13 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
 #if INCLUSIVE_SUPPORT
     const string strPatternDY = "DYJetsToLL";
     if (regex_search(vInputFilename[0], regex(strPatternDY))) {
+        // -70to100 or -2500toInf
         const string strPatternSuf = "-([0-9]+)to([0-9]+|Inf)[^0-9]";
         isInclusive = true;
         for (const char* inclusiveTypeCandidate: {"HT"})
         {
             printf("Trying inclusiveTypeCandidate %s\n", inclusiveTypeCandidate);
+            // _HT-70to100
             regex rPatternExclusive(strPatternDY + "[^/]*_" + inclusiveTypeCandidate + strPatternSuf);
             if (regex_search(vInputFilename[0], rPatternExclusive)) {
                 isInclusive = false;
