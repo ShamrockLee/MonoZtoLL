@@ -30,10 +30,12 @@ void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpac
         TH1 *h_totevent = tfToAdd->Get<TH1>("Event_Variable/h_totevent");
         std::cerr << "Cross section: " << xsec << std::endl;
         std::cerr << "Total event before preselection: " << h_totevent->GetBinContent(2) << std::endl;
-        const Double_t corr = GlobalConstants::Lumi2017 * xsec / h_totevent->GetBinContent(2);
+        // GlobalConstants::Lumi2017 is in pb (10^-12 barn) and the cross section unit here should be fb (10^-15 barn)
+        // 1 pb = 1000 fb
+        const Double_t corr = (GlobalConstants::Lumi2017 * 1000) * xsec / h_totevent->GetBinContent(2);
         h_totevent->Delete();
         TH1 *h_ZbosonPtToAdd = tfToAdd->Get<TH1>((tSubDir + "/h_ZbosonPt").c_str());
-        h_ZbosonPtToAdd->Sumw2();
+        // (\sum_{all events being filled in this bin} weight^2) for each bin 
         h_ZbosonPtToAdd->Scale(corr);
         if (h_ZbosonPt) {
             h_ZbosonPt->Add(h_ZbosonPtToAdd);
@@ -43,7 +45,6 @@ void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpac
             h_ZbosonPt->SetDirectory(0);
         }
         TH1 *h_pfMetCorrPtToAdd = tfToAdd->Get<TH1>((tSubDir + "/h_pfMetCorrPt").c_str());
-        h_pfMetCorrPtToAdd->Sumw2();
         h_pfMetCorrPtToAdd->Scale(corr);
         if (h_pfMetCorrPt) {
             h_pfMetCorrPt->Add(h_pfMetCorrPtToAdd);
@@ -53,7 +54,6 @@ void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpac
             h_pfMetCorrPt->SetDirectory(0);
         }
         TH2 *h2_ZbosonPt_pfMetCorrPt_ToAdd = tfToAdd->Get<TH2>((tSubDir + "/h2_ZbosonPt_pfMetCorrPt").c_str());
-        h2_ZbosonPt_pfMetCorrPt_ToAdd->Sumw2();
         h2_ZbosonPt_pfMetCorrPt_ToAdd->Scale(corr);
         if (h2_ZbosonPt_pfMetCorrPt) {
             h2_ZbosonPt_pfMetCorrPt->Add(h2_ZbosonPt_pfMetCorrPt_ToAdd);
@@ -81,7 +81,6 @@ void xAna_merge_backgrounds(const char *outputFile, const char *outputMergedSpac
     f_addup(GetGGName("2mu2tau"), GlobalConstants::gg_ZZ_2mu2tau_CS);
     f_addup(GetGGName("4e"), GlobalConstants::gg_ZZ_4e_CS);
     f_addup(GetGGName("4mu"), GlobalConstants::gg_ZZ_4mu_CS);
-    f_addup(GetGGName("4tau"), GlobalConstants::gg_ZZ_4tau_CS);
     f_addup(GetGGName("4tau"), GlobalConstants::gg_ZZ_4tau_CS);
     f_addup("ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8", GlobalConstants::ST_tW_antitop_5f_CS);
     f_addup("ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8", GlobalConstants::ST_tW_top_5f_CS);
