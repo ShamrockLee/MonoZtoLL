@@ -71,6 +71,7 @@ void plotAll(TDirectory *tdirIn, TString dirOut, const Bool_t plotSubdir, const 
       gStyle->SetOptStat(111111);
       gPad->Print(dirOut + seperatorPath + name + ".svg");
     }
+    obj->Delete();
   }
   tdirIn->Close();
 }
@@ -199,6 +200,7 @@ TH1* adjustWithJSONTitle(TH1 *hist) {
     histNew->SetBinContent(0, hist->GetBinContent(0));
     histNew->SetBinContent(nBinsNew + 1, hist->GetBinContent(upperLimitBins - lowerLimitBins + 1));
     histNew->SetEntries(hist->GetEntries());
+    hist->Delete();
     return histNew;
   }
   hist->SetTitle(hist->GetName());
