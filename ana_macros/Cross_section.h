@@ -7,9 +7,9 @@ class GlobalConstants
 {
 public:
     // Unit pb^-1
-    static constexpr float Lumi2017 = 40.5;
+    static constexpr float Lumi2017 = 41.5;
     // For DY Background
-    static constexpr float HT0to70CS = 4274.424946; //need to be calculated for 2017 analysis
+    static constexpr float HT0to70CS = 5706.3941; // 4274.424946; //need to be calculated for 2017 analysis
     static constexpr float HT70to100CS = 146.5;
     static constexpr float HT100to200CS = 160.7;
     static constexpr float HT200to400CS = 48.63;
