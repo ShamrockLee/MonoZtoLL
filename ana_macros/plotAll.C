@@ -11,6 +11,8 @@
 
 #include <TROOT.h>
 #include <TSystem.h>
+#include <TSystemDirectory.h>
+#include <TSystemFile.h>
 #include <TDirectory.h>
 #include <TFile.h>
 #include <TKey.h>
@@ -22,6 +24,7 @@
 #include <TLegend.h>
 #include <TMath.h>
 #include <TStyle.h>
+#include <TList.h>
 
 #include <functional>
 #include <iostream>
@@ -30,7 +33,7 @@
 void plotAll(TString pathFileIn, TString dirOut, const Bool_t plotSubdir = true, const Bool_t normalize = false, const Bool_t logy = false, const Option_t *optionDraw = "", const std::function<TH1*(TH1*)> funAdjustHist = nullptr);
 
 void plotAll(TDirectory *tdirIn, TString dirOut, const Bool_t plotSubdir, const Bool_t normalize, const Bool_t logy, const Option_t *optionDraw, const std::function<TH1*(TH1*)> funAdjustHist) {
-  TString seperatorPath = "/";
+  const TString seperatorPath("/");
   gSystem->mkdir(dirOut);
   if (dirOut.Length() > 1 && dirOut.EndsWith(seperatorPath)) {
     dirOut.Resize(dirOut.Length()-1);
@@ -73,16 +76,42 @@ void plotAll(TDirectory *tdirIn, TString dirOut, const Bool_t plotSubdir, const 
     }
     obj->Delete();
   }
-  tdirIn->Close();
+}
+
+void plotAll(TSystemFile *tsysfIn, const TString dirOut, const Bool_t plotSubdir, const Bool_t normalize, const Bool_t logy, const Option_t *optionDraw, const std::function<TH1*(TH1*)> funAdjustHist) {
+  std::cerr << "dirOut: " << dirOut << std::endl;
+  std::cerr << "tsysfIn path: " << tsysfIn->GetTitle() << " basename: " << tsysfIn->GetName() << std::endl;
+  std::cerr << "isDirectory: " << tsysfIn->IsDirectory() << std::endl;
+  const TString seperatorPath ("/");
+  gSystem->mkdir(dirOut);
+  if (tsysfIn->IsDirectory()) {
+    TSystemDirectory *tsysdIn = new TSystemDirectory(gSystem->BaseName(tsysfIn->GetName()), tsysfIn->GetTitle());
+    delete tsysfIn;
+    std::cerr << "tsysdIn: " << tsysdIn << std::endl;
+    TList *listOfFiles = tsysdIn->GetListOfFiles();
+    std::cerr << "listOfFiles: " << listOfFiles << std::endl;
+    for (const auto&& tsysfChildRaw: *listOfFiles) {
+      std::cerr << "tsysfChildRaw: " << tsysfChildRaw << std::endl; 
+      TSystemFile *tsysfChild = static_cast<TSystemFile *>(tsysfChildRaw);
+      TString basenameFileInChild(tsysfChildRaw->GetName());
+      if (basenameFileInChild == "." || basenameFileInChild == "..") continue;
+      std::cerr << "basenameFileInChild: " << basenameFileInChild << std::endl;
+      TString basenameDirOutChild = basenameFileInChild.EndsWith(".root") ? basenameFileInChild(0, basenameFileInChild.Length() - 5) : basenameFileInChild;
+      plotAll(tsysfChild, (dirOut.EndsWith(seperatorPath) ? dirOut : dirOut + seperatorPath) + basenameDirOutChild, plotSubdir, normalize, logy, optionDraw, funAdjustHist);
+    }
+  } else {
+    TFile *fileIn = TFile::Open(tsysfIn->GetTitle() + seperatorPath + tsysfIn->GetName());
+    delete tsysfIn;
+    plotAll(fileIn, dirOut, plotSubdir, normalize, logy, optionDraw, funAdjustHist);
+    fileIn->Close();
+  }
 }
 
 void plotAll(const TString pathFileIn, const TString dirOut, const Bool_t plotSubdir, const Bool_t normalize, const Bool_t logy, const Option_t *optionDraw, const std::function<TH1*(TH1*)> funAdjustHist) {
   // TString basenameFileIn = gSystem->GetFromPipe(
   //     Form("file=%s; test=${file##*/}; echo \"${test%%.root}\"",
   //     pathFileIn.Data()));
-  gSystem->mkdir(dirOut, true);
-  TFile *fileIn = TFile::Open(pathFileIn);
-  plotAll(fileIn, dirOut, plotSubdir, normalize, logy, optionDraw, funAdjustHist);
+  plotAll(new TSystemFile(pathFileIn, pathFileIn), dirOut, plotSubdir, normalize, logy, optionDraw, funAdjustHist);
 }
 
 void plotAll(const char* pathFileIn, const char* dirout, const Bool_t plotSubdir = true, const Bool_t normalize = false, const Bool_t logy = false, const Option_t *optionDraw = "", const std::function<TH1*(TH1*)> funAdjustHist = nullptr) {
