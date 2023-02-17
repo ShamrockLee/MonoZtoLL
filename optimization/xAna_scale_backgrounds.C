@@ -29,11 +29,13 @@ void xAna_scale_backgrounds(const char *outputMergedScaledSpace, const char *out
         TFile *tfIn = TFile::Open((outputMergedSpace + std::string("/") + inputFilename + filenameSuffixMerged).c_str());
         TFile *tfOut = TFile::Open((outputMergedScaledSpace + std::string("/") + inputFilename + filenameSuffixScaled).c_str(), "RECREATE");
         TH1 *h_totevent = tfIn->Get<TH1>("Event_Variable/h_totevent");
-        std::cerr << "Cross section: " << xsec << std::endl;
-        std::cerr << "Total event before preselection: " << h_totevent->GetBinContent(2) << std::endl;
+        std::cout << "Cross section: " << xsec << std::endl;
+        std::cout << "Total event before preselection: " << h_totevent->GetBinContent(2) << std::endl;
         // GlobalConstants::Lumi2017 is in pb (10^-12 barn) and the cross section unit here should be fb (10^-15 barn)
         // 1 pb = 1000 fb
         const Double_t corr = (GlobalConstants::Lumi2017 * 1000) * xsec / h_totevent->GetBinContent(2);
+        std::cout << "corr: " << corr << std::endl;
+        std::cout << std::endl;
         h_totevent->Delete();
         tfOut->mkdir(tSubDir.c_str())->cd();
         TH1 *h_ZbosonPtScaled = tfIn->Get<TH1>((tSubDir + "/h_ZbosonPt").c_str());
