@@ -772,7 +772,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     h_recoee_vetoTau->Fill(1, eventWeight);
                     h_ee_npass->Fill(3, eventWeight);
 
-                    // 6. Z boson
+                    // 5. Z boson
                     if (goodElectrons[0].Pt() <= 25 && goodElectrons[1].Pt() <= 20)
                     {
                         continue;
