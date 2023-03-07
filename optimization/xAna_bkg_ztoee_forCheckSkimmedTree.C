@@ -313,15 +313,15 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     h_recoee_nAK4pass->GetYaxis()->SetTitle("Number of Events");
     h_recoee_nAK4pass->Sumw2();
 
-    TH1D *h_ZbosonPt = new TH1D("h_ZbosonPt", "ZbosonPt", 500, 0, 500);
+    TH1D *h_ZbosonPt = new TH1D("h_ZbosonPt", "ZbosonPt", 1000, 0, 1000);
     h_ZbosonPt->GetXaxis()->SetTitle("Pt of Z boson after preselection");
     h_ZbosonPt->GetYaxis()->SetTitle("Number of Events");
 
-    TH1D *h_pfMetCorrPt = new TH1D("h_pfMetCorrPt", "pfMetCorrPt", 500, 0, 500);
+    TH1D *h_pfMetCorrPt = new TH1D("h_pfMetCorrPt", "pfMetCorrPt", 1000, 0, 1000);
     h_pfMetCorrPt->GetXaxis()->SetTitle("Missing transverse momentum after preselection");
     h_pfMetCorrPt->GetYaxis()->SetTitle("Number of Events");
 
-    TH2F *h2_ZbosonPt_pfMetCorrPt = new TH2F("h2_ZbosonPt_pfMetCorrPt", "ZbosonPt vs. pfMetCorrPt", 500, 0, 500, 500, 0, 500);
+    TH2F *h2_ZbosonPt_pfMetCorrPt = new TH2F("h2_ZbosonPt_pfMetCorrPt", "ZbosonPt vs. pfMetCorrPt", 1000, 0, 1000, 1000, 0, 1000);
     h2_ZbosonPt_pfMetCorrPt->GetXaxis()->SetTitle("Pt of Z boson after preselection");
     h2_ZbosonPt_pfMetCorrPt->GetYaxis()->SetTitle("Missing transverse momentum after preselection");
     //----------------------
