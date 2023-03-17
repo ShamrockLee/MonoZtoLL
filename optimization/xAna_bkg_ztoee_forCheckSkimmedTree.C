@@ -316,6 +316,13 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     TH1D *h_ZbosonPt = new TH1D("h_ZbosonPt", "ZbosonPt", 1000, 0, 1000);
     h_ZbosonPt->GetXaxis()->SetTitle("Pt of Z boson after preselection");
     h_ZbosonPt->GetYaxis()->SetTitle("Number of Events");
+    TH1D *h_ZbosonPt_HasLPairsEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_HasLPairsEle"));
+    TH1D *h_ZbosonPt_HasVtxEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_HasVtxEle"));
+    TH1D *h_ZbosonPt_NoTauEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_NoTauEle"));
+    TH1D *h_ZbosonPt_LPairsPassPtEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_LPairsPassPtEle"));
+    TH1D *h_ZbosonPt_ZMassCutEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_ZMassCutEle"));
+    TH1D *h_ZbosonPt_NoExtraLEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_NoExtraLEle"));
+    TH1D *h_ZbosonPt_HasTHINJetEle = static_cast<TH1D *>(h_ZbosonPt->Clone("h_ZbosonPt_HasTHINJetEle"));
 
     TH1D *h_pfMetCorrPt = new TH1D("h_pfMetCorrPt", "pfMetCorrPt", 1000, 0, 1000);
     h_pfMetCorrPt->GetXaxis()->SetTitle("Missing transverse momentum after preselection");
@@ -690,7 +697,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                 h_ele_n->Fill(goodElectrons.size(), eventWeight);
 
                 sort(goodElectrons.begin(), goodElectrons.end(), pt_greater);
-                
+
                 // 2. Muon
                 Long64_t nMu = data.GetLong64("st_nMu");
                 Float_t* muPx = data.GetPtrFloat("st_muPx");
@@ -757,12 +764,21 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     h_recoee_event->Fill(1, eventWeight);
                     h_ee_npass->Fill(1, eventWeight);
 
+                    const TLorentzVector Zboson = goodElectrons[0] + goodElectrons[1];
+                    const float Zboson_pt = Zboson.Pt();
+                    const float Zboson_mass = Zboson.M();
+                    const float Zboson_eta = Zboson.Eta();
+                    const float Zboson_phi = Zboson.Phi();
+
+                    h_ZbosonPt_HasLPairsEle->Fill(Zboson_pt, eventWeight);
+
                     // 3. Good Vertex
                     Long64_t nVtx = data.GetLong64("st_nVtx");
                     if (nVtx < 1)
                         continue;
                     h_recoee_Vtxpass->Fill(1, eventWeight);
                     h_ee_npass->Fill(2, eventWeight);
+                    h_ZbosonPt_HasVtxEle->Fill(Zboson_pt, eventWeight);
 
                     // 4. Tau Veto
                     //Long64_t nTau_DRBased_EleVeto = data.GetLong64("st_nTau_DRBased_EleMuVeto");
@@ -771,6 +787,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                         continue;
                     h_recoee_vetoTau->Fill(1, eventWeight);
                     h_ee_npass->Fill(3, eventWeight);
+                    h_ZbosonPt_NoTauEle->Fill(Zboson_pt, eventWeight);
 
                     // 5. Z boson
                     if (goodElectrons[0].Pt() <= 25 && goodElectrons[1].Pt() <= 20)
@@ -779,6 +796,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     }
                     h_ee_npass->Fill(4, eventWeight);
                     h_recoee_eePtpass->Fill(1, eventWeight);
+                    h_ZbosonPt_LPairsPassPtEle->Fill(Zboson_pt, eventWeight);
 
                     float PDGZmass = 91.1876;
                     TLorentzVector dilep = goodElectrons[0] + goodElectrons[1];
@@ -790,6 +808,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     }
                     h_ee_npass->Fill(5, eventWeight);
                     h_recoee_deltaMasspass->Fill(1, eventWeight);
+                    h_ZbosonPt_ZMassCutEle->Fill(Zboson_pt, eventWeight);
             
                     //----------------------
                     // To reduce diboson case (veto extra leptons)
@@ -800,15 +819,11 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     }
                     h_Zboson_n->Fill(1, eventWeight);
                     h_ee_npass->Fill(6, eventWeight);
+                    h_ZbosonPt_NoExtraLEle->Fill(Zboson_pt, eventWeight);
                     nZboson ++;
 
-                    TLorentzVector Zboson = goodElectrons[0] + goodElectrons[1];
                     //if (Zboson.Pt() < 50)
                     //    continue;
-                    float Zboson_pt = Zboson.Pt();
-                    float Zboson_mass = Zboson.M();
-                    float Zboson_eta = Zboson.Eta();
-                    float Zboson_phi = Zboson.Phi();
                     //h_recoee_ZbosonPtpass->Fill(1, eventWeight);
                     //h_ee_npass->Fill(8, eventWeight);
 
@@ -839,6 +854,7 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
                     
                     h_recoee_nAK4pass->Fill(1, eventWeight); //add this -> write in tree
                     h_ee_npass->Fill(7, eventWeight);
+                    h_ZbosonPt_HasTHINJetEle->Fill(Zboson_pt, eventWeight);
                     nEventAfterAllPreselection ++;
 
                     //---------------------------
@@ -1069,6 +1085,13 @@ void xAna_bkg_ztoee_forCheckSkimmedTree(vector<const char*> vInputFilename, cons
     h_ZbosonPt->Write();
     h_pfMetCorrPt->Write();
     h2_ZbosonPt_pfMetCorrPt->Write();
+    h_ZbosonPt_HasLPairsEle->Write();
+    h_ZbosonPt_HasVtxEle->Write();
+    h_ZbosonPt_NoTauEle->Write();
+    h_ZbosonPt_LPairsPassPtEle->Write();
+    h_ZbosonPt_ZMassCutEle->Write();
+    h_ZbosonPt_NoExtraLEle->Write();
+    h_ZbosonPt_HasTHINJetEle->Write();
     outFile->cd("/");
     outFile->Close();
 } // big end
