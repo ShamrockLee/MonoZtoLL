@@ -10,6 +10,9 @@ subDirRoot="";
 dryRun=0
 force=0
 
+extraDirSearchCommand=()
+extraFileSearchCommand=()
+
 while (( "$#" )); do
 	case "$1" in
 		-h|--help)
@@ -20,6 +23,22 @@ END_OF_HELP
 		--dry-run)
 			dryRun=1
 			shift
+			;;
+		--extra-dir-search-command)
+			extraDirSearchCommand+=( "$2" )
+			shift 2
+			;;
+		--extra-dir-search-commands)
+			extraDirSearchCommand+=( $2 )
+			shift 2
+			;;
+		--extra-file-search-command)
+			extraFileSearchCommand+=( "$2" )
+			shift 2
+			;;
+		--extra-file-search-commands)
+			extraFileSearchCommand+=( $2 )
+			shift 2
 			;;
 		-f|--force)
 			force=1
@@ -87,13 +106,14 @@ if [[ -n "${maxDepth:-}" ]]; then
 	searchCommand+=( "-maxdepth" "$maxDepth" )
 fi
 searchCommand+=( "-type" "d" )
-searchCommand+=( "-print0" )
+searchCommand+=( "${extraDirSearchCommand[@]}" )
+searchCommand+=( "-print" )
 
-while IFS= read -r -d $'\0' pathOutputDir; do
+while IFS=$'\n' read -r pathOutputDir; do
 	declare -a filesToMerge=()
-	while IFS= read -r -d $'\0' file; do
+	while IFS='\n' read -r file; do
 		filesToMerge+=( "$file" )
-	done < <(find "$pathOutputDir" -mindepth 1 -maxdepth 1 -name "*.root" -print0)
+	done < <(find "$pathOutputDir" -mindepth 1 -maxdepth 1 -name "*.root" "${extraFileSearchCommand[@]}" -print )
   (( ${#filesToMerge[@]} )) || continue;
   pathDest="${outputMergedSpace}${pathOutputDir:${#outputSpace}}_merged.root"
   wrapDryRun mkdir -p "$(dirname "$pathDest")"
