@@ -1,3 +1,4 @@
+#include <TError.h>
 #include <TFile.h>
 #include <TH1.h>
 #include <TH2.h>
@@ -26,8 +27,18 @@ void xAna_scale_backgrounds(const char *outputMergedScaledSpace, const char *out
     (void)gSystem->mkdir(outputMergedScaledSpace);
 
     auto f_scale = [&outputMergedSpace, &outputMergedScaledSpace, &tSubDir, &filenameSuffixMerged, &filenameSuffixScaled](const std::string inputFilename, const Float_t xsec) {
-        TFile *tfIn = TFile::Open((outputMergedSpace + std::string("/") + inputFilename + filenameSuffixMerged).c_str());
-        TFile *tfOut = TFile::Open((outputMergedScaledSpace + std::string("/") + inputFilename + filenameSuffixScaled).c_str(), "RECREATE");
+        const std::string pathFileIn = outputMergedSpace + std::string("/") + inputFilename + filenameSuffixMerged;
+        const std::string pathFileOut = outputMergedScaledSpace + std::string("/") + inputFilename + filenameSuffixScaled;
+        TFile *tfIn = TFile::Open(pathFileIn.c_str());
+        if (!tfIn || tfIn->IsZombie()) {
+          Warning("xAna_scale_backgrounds", "Input file %s failed to open", pathFileIn.c_str());
+          return;
+        }
+        if (!tfIn->GetListOfKeys()->GetSize()) {
+          Warning("xAna_scale_backgrounds", "Input file %s has no keys", pathFileIn.c_str());
+          return;
+        }
+        TFile *tfOut = TFile::Open(pathFileOut.c_str(), "RECREATE");
         TH1 *h_totevent = tfIn->Get<TH1>("Event_Variable/h_totevent");
         std::cout << "Cross section: " << xsec << std::endl;
         std::cout << "Total event before preselection: " << h_totevent->GetBinContent(2) << std::endl;
@@ -38,14 +49,21 @@ void xAna_scale_backgrounds(const char *outputMergedScaledSpace, const char *out
         std::cout << std::endl;
         h_totevent->Delete();
         tfOut->mkdir(tSubDir.c_str())->cd();
-        TH1 *h_ZbosonPtScaled = tfIn->Get<TH1>((tSubDir + "/h_ZbosonPt").c_str());
-        h_ZbosonPtScaled->Scale(corr);
-        h_ZbosonPtScaled->Write();
-        h_ZbosonPtScaled->Delete();
-        TH1 *h_pfMetCorrPtScaled = tfIn->Get<TH1>((tSubDir + "/h_pfMetCorrPt").c_str());
-        h_pfMetCorrPtScaled->Scale(corr);
-        h_pfMetCorrPtScaled->Write();
-        h_pfMetCorrPtScaled->Delete();
+        for (std::string nameH1: {
+            "h_ZbosonPt",
+            "h_ZbosonPt_HasLPairsEle",
+            "h_ZbosonPt_HasVtxEle",
+            "h_ZbosonPt_NoTauEle",
+            "h_ZbosonPt_LPairsPassPtEle",
+            "h_ZbosonPt_ZMassCutEle",
+            "h_ZbosonPt_NoExtraLEle",
+            "h_ZbosonPt_HasTHINJetEle",
+            "h_pfMetCorrPt" }) {
+          TH1 *h1Scaled = tfIn->Get<TH1>((tSubDir + "/" + nameH1).c_str());
+          h1Scaled->Scale(corr);
+          h1Scaled->Write();
+          h1Scaled->Delete();
+        }
         TH2 *h2_ZbosonPt_pfMetCorrPt_Scaled = tfIn->Get<TH2>((tSubDir + "/h2_ZbosonPt_pfMetCorrPt").c_str());
         h2_ZbosonPt_pfMetCorrPt_Scaled->Scale(corr);
         h2_ZbosonPt_pfMetCorrPt_Scaled->Write();
